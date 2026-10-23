@@ -1,5 +1,7 @@
 package org.codefilarete.model;
 
+import java.time.LocalDateTime;
+
 /**
  * Simple JavaBean domain object representing a visit.
  *
@@ -16,8 +18,10 @@ public class Visit extends BaseEntity {
      * Holds value of property pet.
      */
     private Pet pet;
-
-
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    
+    
     /**
      * Creates a new instance of Visit for the current date
      */
@@ -60,5 +64,20 @@ public class Visit extends BaseEntity {
     public void setPet(Pet pet) {
         this.pet = pet;
     }
-
+    
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+    
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+    
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+    
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
 }

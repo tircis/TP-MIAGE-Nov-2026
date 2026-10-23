@@ -71,6 +71,12 @@ public class Pet extends NamedEntity {
     }
     
     public void addVisit(Visit visit) {
+        for (Visit existingVisit : getVisitsInternal()) {
+            if (existingVisit.getStartTime().isBefore(visit.getEndTime())
+                    && visit.getStartTime().isBefore(existingVisit.getEndTime())) {
+                throw new IllegalArgumentException("Visit time range overlaps an existing visit");
+            }
+        }
         getVisitsInternal().add(visit);
         visit.setPet(this);
     }
