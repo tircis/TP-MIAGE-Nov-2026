@@ -1,10 +1,8 @@
 package org.codefilarete.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,10 +70,7 @@ public class Pet extends NamedEntity {
     
     public void addVisit(Visit visit) {
         for (Visit existingVisit : getVisitsInternal()) {
-            if (existingVisit.getStartTime().isBefore(visit.getEndTime())
-                    && visit.getStartTime().isBefore(existingVisit.getEndTime())) {
-                throw new IllegalArgumentException("Visit time range overlaps an existing visit");
-            }
+            existingVisit.assertDoesNotOverlap(visit);
         }
         getVisitsInternal().add(visit);
         visit.setPet(this);

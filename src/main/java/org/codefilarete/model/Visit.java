@@ -80,4 +80,11 @@ public class Visit extends BaseEntity {
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
+    
+    public void assertDoesNotOverlap(Visit visit) {
+        if (startTime.isBefore(visit.endTime)
+                && visit.startTime.isBefore(endTime)) {
+            throw new IllegalArgumentException("Visit time range overlaps an existing visit");
+        }
+    }
 }
