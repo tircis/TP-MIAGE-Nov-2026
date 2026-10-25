@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class VisitTest {
@@ -29,6 +31,11 @@ class VisitTest {
         
         // When we try to add the overlapping visit, it should throw an IllegalArgumentException
         assertThrows(IllegalArgumentException.class, () -> pet.addVisit(overlappingVisit));
+        
+        // Then the pet's visits should still only contain the existing visit
+        assertEquals(1, pet.getVisits().size());
+        Visit lonelyVisit = pet.getVisits().iterator().next();
+        assertSame(existingVisit, lonelyVisit);
     }
     
 }
