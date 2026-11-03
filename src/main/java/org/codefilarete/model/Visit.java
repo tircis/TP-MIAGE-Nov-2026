@@ -1,5 +1,8 @@
 package org.codefilarete.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDateTime;
 
 /**
@@ -52,6 +55,7 @@ public class Visit extends BaseEntity {
      *
      * @return Value of property pet.
      */
+    @JsonIgnore
     public Pet getPet() {
         return this.pet;
     }
@@ -65,6 +69,7 @@ public class Visit extends BaseEntity {
         this.pet = pet;
     }
     
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     public LocalDateTime getStartTime() {
         return startTime;
     }
@@ -73,6 +78,7 @@ public class Visit extends BaseEntity {
         this.startTime = startTime;
     }
     
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     public LocalDateTime getEndTime() {
         return endTime;
     }
