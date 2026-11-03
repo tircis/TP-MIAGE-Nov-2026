@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,8 +23,12 @@ class VisitControllerTest {
 
     @Test
     void addVisit_acceptsJsonAndReturnsUpdatedPetAsJson() throws Exception {
-        int expectedVisitId = new Random().nextInt();
-        VisitController testInstance = new VisitController(new DummyVisitService(expectedVisitId));
+        VisitService visitService = mock(VisitService.class);
+        Visit dummyVisit = new Visit();
+        dummyVisit.setDescription("a dummy visit");
+        when(visitService.createVisit(any(Visit.class))).thenReturn(dummyVisit);
+
+        VisitController testInstance = new VisitController(visitService);
         
         MockMvc mockMvc = standaloneSetup(testInstance).build();
 
@@ -41,22 +48,13 @@ class VisitControllerTest {
 
         String expectedJson = """
                 {
-                  "id": %d,
-                  "description": "Annual checkup",
-                  "startTime": "2026-11-02T09:00:00",
-                  "endTime": "2026-11-02T09:30:00",
-                  "new": false
+                  "id": null,
+                  "description": "a dummy visit",
+                  "startTime": null,
+                  "endTime": null,
+                  "new": true
                 }
-                """.formatted(expectedVisitId);
+                """;
         assertEquals(objectMapper.readTree(expectedJson), objectMapper.readTree(response));
-    }
-    
-    private record DummyVisitService(int visitId) implements VisitService {
-        
-        @Override
-        public Visit createVisit(Visit visit) {
-            visit.setId(visitId);
-            return visit;
-        }
     }
 }
