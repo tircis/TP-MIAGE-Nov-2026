@@ -1,6 +1,10 @@
 package org.codefilarete.controller;
 
+import java.util.Random;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.codefilarete.model.Visit;
+import org.codefilarete.service.VisitService;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -16,7 +20,8 @@ class VisitControllerTest {
 
     @Test
     void addVisit_acceptsJsonAndReturnsUpdatedPetAsJson() throws Exception {
-        VisitController testInstance = new VisitController();
+        int expectedVisitId = new Random().nextInt();
+        VisitController testInstance = new VisitController(new DummyVisitService(expectedVisitId));
         
         MockMvc mockMvc = standaloneSetup(testInstance).build();
 
@@ -36,13 +41,22 @@ class VisitControllerTest {
 
         String expectedJson = """
                 {
-                  "id": 42,
+                  "id": %d,
                   "description": "Annual checkup",
                   "startTime": "2026-11-02T09:00:00",
                   "endTime": "2026-11-02T09:30:00",
                   "new": false
                 }
-                """;
+                """.formatted(expectedVisitId);
         assertEquals(objectMapper.readTree(expectedJson), objectMapper.readTree(response));
+    }
+    
+    private record DummyVisitService(int visitId) implements VisitService {
+        
+        @Override
+        public Visit createVisit(Visit visit) {
+            visit.setId(visitId);
+            return visit;
+        }
     }
 }
