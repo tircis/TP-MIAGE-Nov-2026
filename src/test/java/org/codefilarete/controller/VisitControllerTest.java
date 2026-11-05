@@ -1,10 +1,8 @@
 package org.codefilarete.controller;
 
-import java.util.Random;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.codefilarete.model.Visit;
-import org.codefilarete.service.VisitService;
+import org.codefilarete.miage.domain.inbound.VisitDTO;
+import org.codefilarete.miage.domain.inbound.VisitService;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -24,9 +22,8 @@ class VisitControllerTest {
     @Test
     void addVisit_acceptsJsonAndReturnsUpdatedPetAsJson() throws Exception {
         VisitService visitService = mock(VisitService.class);
-        Visit dummyVisit = new Visit();
-        dummyVisit.setDescription("a dummy visit");
-        when(visitService.createVisit(any(Visit.class))).thenReturn(dummyVisit);
+        VisitDTO dummyVisit = new VisitDTO(null, "a dummy visit", null, null);
+        when(visitService.createVisit(any(VisitDTO.class))).thenReturn(dummyVisit);
 
         VisitController testInstance = new VisitController(visitService);
         
@@ -51,8 +48,7 @@ class VisitControllerTest {
                   "id": null,
                   "description": "a dummy visit",
                   "startTime": null,
-                  "endTime": null,
-                  "new": true
+                  "endTime": null
                 }
                 """;
         assertEquals(objectMapper.readTree(expectedJson), objectMapper.readTree(response));
