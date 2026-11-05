@@ -1,8 +1,9 @@
 package org.codefilarete.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.codefilarete.miage.domain.inbound.CreateVisitCommand;
 import org.codefilarete.miage.domain.inbound.VisitDTO;
-import org.codefilarete.miage.domain.inbound.VisitService;
+import org.codefilarete.miage.domain.inbound.CreateVisitCommandHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,11 +22,12 @@ class VisitControllerTest {
 
     @Test
     void addVisit_acceptsJsonAndReturnsUpdatedPetAsJson() throws Exception {
-        VisitService visitService = mock(VisitService.class);
-        VisitDTO dummyVisit = new VisitDTO(null, "a dummy visit", null, null);
-        when(visitService.createVisit(any(VisitDTO.class))).thenReturn(dummyVisit);
+        CreateVisitCommandHandler createVisitHandler = mock(CreateVisitCommandHandler.class);
+        CreateVisitCommand createVisitCommand = new CreateVisitCommand("a dummy visit", null, null);
+        VisitDTO dummyVisit = new VisitDTO(42, "a dummy visit", null, null);
+        when(createVisitHandler.createVisit(any(CreateVisitCommand.class))).thenReturn(dummyVisit);
 
-        VisitController testInstance = new VisitController(visitService);
+        VisitController testInstance = new VisitController(createVisitHandler);
         
         MockMvc mockMvc = standaloneSetup(testInstance).build();
 
@@ -34,7 +36,6 @@ class VisitControllerTest {
                         .accept(APPLICATION_JSON)
                         .content("""
                                 {
-                                  "id": null,
                                   "description": "Annual checkup",
                                   "startTime": "2026-11-02T09:00:00",
                                   "endTime": "2026-11-02T09:30:00"
@@ -45,7 +46,7 @@ class VisitControllerTest {
 
         String expectedJson = """
                 {
-                  "id": null,
+                  "id": 42,
                   "description": "a dummy visit",
                   "startTime": null,
                   "endTime": null
