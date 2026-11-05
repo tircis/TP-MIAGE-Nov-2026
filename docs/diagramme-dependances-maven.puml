@@ -1,0 +1,53 @@
+@startuml
+title Dépendances Maven des modules
+left to right direction
+skinparam componentStyle rectangle
+
+component "project root" as parent
+component "miage-domain" as domain
+component "miage-domain-inbound" as inbound
+component "miage-controller" as controller
+
+package "dépendance externes" {
+  component " springWebMvc" as springWebMvc
+  component " jacksonDatabind" as jacksonDatabind
+  component " jacksonJsr310" as jacksonJsr310
+  component " springTest" as springTest
+}
+
+parent *-- controller : module
+parent *-- domain : module
+parent *-- inbound : module
+
+controller ..> inbound
+domain ..> inbound
+
+controller ..> springWebMvc
+controller ..> jacksonDatabind
+controller ..> jacksonJsr310
+controller ..> springTest : test
+
+
+legend bottom
+   - la dépendance du module des controllers envers le module "contrat Front", pas envers le module principal
+   - la dépendance de Spring MVC pour les controllers, pas pour le module principal
+   - les annotations JSON sur Visit.java ont disparu
+endlegend
+
+
+<style>
+title {
+  FontSize 24
+  FontColor blue
+}
+legend {
+  FontSize 15
+  BackGroundColor yellow
+  Margin 10
+  Padding 10
+}
+package {
+  FontSize 15
+}
+</style>
+@enduml
